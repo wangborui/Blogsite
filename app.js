@@ -1,5 +1,6 @@
 //jshint esversion:6
 
+const _ = require('lodash');
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -42,7 +43,18 @@ app.post("/compose", (req, res) => {
 });
 
 app.get('/posts/:post', function (req, res) {
-  console.log(req.params.post);
+  const requestedTitle = req.params.post;
+
+  posts.map((post) => {
+    const postTitle = post.title;
+    const postContent = post.content;
+
+    if(_.lowerCase(postTitle) === _.lowerCase(requestedTitle)) {
+      res.render('post', {postTitle: postTitle, postContent: postContent});
+    } else {
+      console.log("Not A Match!");
+    }
+  });
 })
 
 app.listen(3000, function() {
